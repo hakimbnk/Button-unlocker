@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Unlocker</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 300px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0d0d12;
+      color: #e0e0ee;
+      padding: 18px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #1e1e2e;
+    }
+    .logo {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .title { font-size: 15px; font-weight: 700; color: #f0f0ff; }
+    .subtitle { font-size: 11px; color: #5555.77; color: #606080; margin-top: 2px; }
+
+    .site-card {
+      background: #13131f;
+      border: 1px solid #1e1e30;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-info { display: flex; align-items: center; gap: 10px; }
+    .site-dot { width: 9px; height: 9px; border-radius: 50%; background: #2a2a40; flex-shrink: 0; }
+    .site-dot.detected { background: #a855f7; box-shadow: 0 0 6px #a855f7; }
+    .site-name { font-size: 13px; color: #c0c0e0; }
+    .site-badge {
+      font-size: 10px; font-weight: 700;
+      padding: 3px 8px; border-radius: 20px;
+      background: rgba(168,85,247,0.15);
+      color: #a855f7;
+      border: 1px solid rgba(168,85,247,0.3);
+      letter-spacing: 0.5px;
+    }
+    .site-badge.unsupported {
+      background: rgba(100,100,130,0.15);
+      color: #606080;
+      border-color: rgba(100,100,130,0.3);
+    }
+
+    .toggle-card {
+      background: #13131f;
+      border: 1px solid #1e1e30;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .toggle-left .label { font-size: 13px; font-weight: 600; color: #d0d0f0; }
+    .toggle-left .sublabel { font-size: 11px; color: #505070; margin-top: 2px; }
+    .toggle { position: relative; width: 50px; height: 28px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer;
+      top:0; left:0; right:0; bottom:0;
+      background: #1e1e30; border-radius: 28px;
+      transition: 0.3s;
+    }
+    .slider:before {
+      content: ""; position: absolute;
+      width: 22px; height: 22px;
+      left: 3px; bottom: 3px;
+      background: #404060; border-radius: 50%;
+      transition: 0.3s;
+    }
+    input:checked + .slider { background: rgba(168,85,247,0.25); border: 1px solid #7c3aed; }
+    input:checked + .slider:before { transform: translateX(22px); background: #a855f7; }
+
+ 
+    .btn-status {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px;
+      background: #13131f;
+      border: 1px solid #1e1e30;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+    .btn-dot { width: 7px; height: 7px; border-radius: 50%; background: #2a2a40; flex-shrink: 0; }
+    .btn-dot.found { background: #22c55e; box-shadow: 0 0 5px #22c55e; }
+    .btn-dot.missing { background: #ef4444; }
+    .btn-text { font-size: 12px; color: #7070a0; }
+
+  
+    .sites-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .site-item {
+      background: #13131f;
+      border: 1px solid #1e1e30;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 11px;
+      color: #6060.88; color: #606088;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .site-item.active-site {
+      border-color: rgba(168,85,247,0.4);
+      color: #b070f0;
+      background: rgba(168,85,247,0.08);
+    }
+    .site-emoji { font-size: 13px; }
+
+    .section-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #404060;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    
+    <div>
+      <div class="title">Button Unlocker</div>
+      <div class="subtitle">Claude · ChatGPT · Gemini </div>
+    </div>
+  </div>
+
+  <div class="site-card">
+    <div class="site-info">
+      <div class="site-dot" id="siteDot"></div>
+      <span class="site-name" id="siteName">Chargement...</span>
+    </div>
+    <span class="site-badge" id="siteBadge">DÉTECTION</span>
+  </div>
+
+  <div class="toggle-card">
+    <div class="toggle-left">
+      <div class="label">Débloquer le bouton</div>
+      <div class="sublabel" id="toggleSub">Activez pour forcer l'envoi</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="toggleSwitch">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="btn-status">
+    <div class="btn-dot" id="btnDot"></div>
+    <span class="btn-text" id="btnText">Recherche du bouton...</span>
+  </div>
+
+  <div class="section-title">Sites supportés</div>
+  <div class="sites-grid" id="sitesGrid">
+    <div class="site-item" data-domain="claude.ai"> Claude</div>
+    <div class="site-item" data-domain="chatgpt.com"> ChatGPT</div>
+    <div class="site-item" data-domain="gemini.google.com">Gemini</div>
+    <div class="site-item" data-domain="perplexity.ai"> Perplexity</div>
+    <div class="site-item" data-domain="mistral.ai">Mistral</div>
+    <div class="site-item" data-domain="poe.com"> Poe</div>
+    <div class="site-item" data-domain="copilot.microsoft.com"> Copilot</div>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
