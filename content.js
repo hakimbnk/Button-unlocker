@@ -190,11 +190,11 @@ function startUnlocker() {
     if (isEnabled) unlockButton();
   }, 300);
 
-  console.log(`[AI Unlocker] ✅ Activé sur ${config.name}`);
+  console.log(`[AI Unlocker] Activé sur ${config.name}`);
 }
 
 function stopUnlocker() {
   if (observer) { observer.disconnect(); observer = null; }
   if (intervalId) { clearInterval(intervalId); intervalId = null; }
-  if (config) console.log(`[AI Unlocker] ⛔ Désactivé sur ${config.name}`);
+  if (config) console.log(`[AI Unlocker] Désactivé sur ${config.name}`);
 }
