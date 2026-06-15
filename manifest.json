@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "AI Send Button Unlocker",
+  "name": "Button Unlocker",
   "version": "2.0",
   "description": "Débloque le bouton d'envoi sur Claude, ChatGPT, Gemini, Perplexity et plus",
   "permissions": ["activeTab", "storage", "scripting"],
